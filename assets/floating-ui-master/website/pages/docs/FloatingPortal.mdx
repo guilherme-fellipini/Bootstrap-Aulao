@@ -1,0 +1,72 @@
+# FloatingPortal
+
+Portals your floating element outside the main app node.
+
+```js
+import {FloatingPortal} from '@floating-ui/react-dom-interactions';
+
+function Tooltip() {
+  return (
+    <FloatingPortal>
+      {open && <div>Tooltip</div>}
+    </FloatingPortal>
+  );
+}
+```
+
+> **Don't conditionally render the FloatingPortal**. Instead,
+> conditionally render its children as seen above.
+
+## Props
+
+```js
+interface Props {
+  id?: string;
+  root?: HTMLElement | null;
+}
+```
+
+### id
+
+default: `'floating-ui-root'{:js}`
+
+If this node does not exist on the document, it will be created
+for you and will be appended to the end of the `<body>{:html}`.
+
+```js
+<FloatingPortal id="custom-root-id">
+  {open && <div>Tooltip</div>}
+</FloatingPortal>
+```
+
+### root
+
+Alternatively, you may pass the root element itself, which
+supports shadow roots.
+
+```js
+<FloatingPortal root={shadowRootNode}>
+  {open && <div>Tooltip</div>}
+</FloatingPortal>
+```
+
+## useFloatingPortalNode
+
+Exposes the portal container node for custom use in other
+components. The hook injects the node, if it does not yet exist
+in the DOM.
+
+```js
+function App() {
+  const portalNode = useFloatingPortalNode({
+    id: 'custom-root-id', // 'floating-ui-root' by default
+    enabled: false, // true by default
+  });
+
+  if (portalNode) {
+    return ReactDOM.createPortal(<div></div>, portalNode);
+  }
+
+  return null;
+}
+```

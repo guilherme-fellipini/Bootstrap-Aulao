@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <style>
+      #scrollspy-content {
+        position: relative;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <br />
+    <br />
+
+    <div class="container">
+      <button
+        class="btn btn-secondary"
+        data-toggle="tooltip"
+        data-placement="bottom"
+        title="Tooltip em baixo"
+      >
+        Botão
+      </button>
+      <button
+        class="btn btn-secondary"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Tooltip a esquerda"
+      >
+        Botão
+      </button>
+      <button
+        class="btn btn-secondary"
+        data-toggle="tooltip"
+        data-placement="right"
+        title="Tooltip a direita"
+      >
+        Botão
+      </button>
+      <button
+        class="btn btn-secondary"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="Tooltip em cima"
+      >
+        Botão
+      </button>
+    </div>
+
+    <script src="assets/jquery-3.6.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(() => {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    </script>
+  </body>
+</html>

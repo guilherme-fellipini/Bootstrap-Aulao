@@ -1,0 +1,233 @@
+# useHover
+
+Adds hover event listeners that change the open state, like CSS
+`:hover{:.objectKey}`.
+
+```js /useHover/
+import {
+  useFloating,
+  useInteractions,
+  useHover,
+} from '@floating-ui/react-dom-interactions';
+
+// ...
+const {context} = useFloating();
+const {getReferenceProps, getFloatingProps} = useInteractions([
+  useHover(context, {
+    // props
+  }),
+]);
+```
+
+## Props
+
+```js
+interface Props {
+  enabled?: boolean;
+  mouseOnly?: boolean;
+  delay?: number | Partial<{open: number, close: number}>;
+  restMs?: number;
+  move?: boolean;
+  handleClose?: null | HandleCloseFn;
+}
+```
+
+### enabled
+
+default: `true{:js}`
+
+Conditionally enable/disable the hook.
+
+```js
+useHover(context, {
+  enabled: false,
+});
+```
+
+### mouseOnly
+
+default: `false{:js}`
+
+Whether the logic only runs for mouse input, ignoring both touch
+and pen pointer inputs.
+
+```js
+useHover(context, {
+  mouseOnly: true,
+});
+```
+
+### delay
+
+default: `0{:js}`
+
+Waits for the specified time when the event listener runs before
+changing the `open{:.const}` state.
+
+```js
+useHover(context, {
+  // both open and close
+  delay: 500,
+
+  // configure them individually
+  delay: {
+    open: 500,
+    close: 0,
+  },
+});
+```
+
+### restMs
+
+default: `0{:js}` (off)
+
+Waits until the user's cursor is at "rest" over the reference
+element before changing the open state.
+
+You can either:
+
+- Use this on its own, without `delay{:.objectKey}` (which must
+  be set to `0{:js}` which is the default), or
+- Use this as a more eager version of `delay{:.objectKey}`, where
+  `delay{:.objectKey}` will then act as a fallback value.
+
+```js
+useHover(context, {
+  // Waits 150ms once the user's cursor is at rest
+  restMs: 150,
+
+  delay: {open: 1000}, // 1000ms fallback open value
+  delay: 0, // OR no fallback value
+});
+```
+
+### move
+
+Whether moving the cursor over the floating element will open it,
+without a regular hover event required.
+
+For example, if it was resting over the reference element when it
+closed. Uses the `'mousemove'{:js}` event.
+
+```js
+useHover(context, {
+  move: false, // true by default
+});
+```
+
+### handleClose
+
+default: `null{:js}`
+
+Instead of closing the floating element when the cursor leaves
+its reference, we can leave it open until a certain condition is
+satisfied.
+
+The package exports a `safePolygon(){:js}` handler which will
+only close the floating element if the pointer is outside a
+dynamically computed polygon area.
+
+This allows the user to move the cursor off the reference element
+and towards the floating element without it closing (e.g. it has
+interactive content inside).
+
+```js
+import {
+  useHover,
+  safePolygon,
+} from '@floating-ui/react-dom-interactions';
+
+// ...
+useHover(context, {
+  handleClose: safePolygon(),
+});
+```
+
+This handler runs on `pointermove{:.string}`.
+
+## safePolygon
+
+A "safe" polygon is one that a pointer is safe to traverse as it
+moves off the reference element and toward the floating element
+after hovering it. If the pointer moves outside of this safe
+area, the floating element closes.
+
+It is a dynamic 4-sided polygon (visually a triangle) originating
+from the cursor once it leaves a reference element.
+[You can see what it looks like here](https://twitter.com/atomiksdev/status/1505076100854337539).
+
+This function takes options.
+
+### restMs
+
+default: `0{:js}` (off)
+
+Determines whether to close the floating once the cursor is at
+rest for the specified number of milliseconds mid-traversal. The
+default value (0) will never close it unless the pointer is
+outside the area.
+
+> **Note:** this applies only if the cursor is not close enough
+> to the floating element to be within the `offset(){:js}`
+> region, so it does not apply too eagerly.
+
+```js
+useHover(context, {
+  handleClose: safePolygon({
+    restMs: 50,
+  }),
+});
+```
+
+### buffer
+
+default: `0.5{:js}`
+
+Determines the amount of buffer (in pixels) there is around the
+the polygon.
+
+While the default value should handle the vast majority of cases
+correctly, if you find your floating element is closing
+unexpectedly as the pointer tries to move toward the floating
+element, try increasing this value.
+
+```js
+useHover(context, {
+  handleClose: safePolygon({
+    buffer: 1,
+  }),
+});
+```
+
+### blockPointerEvents
+
+default: `true{:js}`
+
+Whether CSS `pointer-events` behind the polygon, reference, and
+floating elements are blocked. This ensures the user does not
+fire hover events over other elements unintentionally while they
+traverse the polygon.
+
+```js
+useHover(context, {
+  handleClose: safePolygon({
+    blockPointerEvents: false,
+  }),
+});
+```
+
+However, this does have some side-effects which is why you may
+want to disable it in favor of manually blocking pointer-events
+yourself:
+
+- If the cursor is resting on the reference element, any
+  scrolling containers (except the main window) cannot be
+  scrolled.
+- macOS' auto-hiding scrollbars will appear on scrolling
+  containers (except the main window) in Chrome.
+
+Another option is to add `pointer-events: auto{:sass}` to your
+scrolling container, then add an inner `<div>{:html}` inside the
+scrolling container that wraps all elements inside of it, and
+copies the `<body>{:html}` `pointer-events` style using a
+`MutationObserver{:.class}`.

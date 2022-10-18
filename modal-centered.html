@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <style>
+      #scrollspy-content {
+        position: relative;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      type="button"
+      class="btn btn-primary btn-lg"
+      data-toggle="modal"
+      data-target="#modal-1"
+    >
+      Abrir
+    </button>
+
+    <div class="modal" id="modal-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">Teste do Modal</div>
+            <button class="close" type="button" data-dismiss="modal">
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate
+              voluptatibus rem deserunt repellat aspernatur pariatur hic ab nemo
+              reprehenderit maiores reiciendis cumque facere itaque dignissimos
+              molestiae ipsum, deleniti, eius beatae!
+            </p>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              data-dismiss="modal"
+              class="btn btn-secondary"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-continue">
+              Continuar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/jquery-3.6.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(() => {
+        $("#modal-1")
+          .on("show.bs.modal", (e) => {
+            console.log("show.bs.modal", e.target);
+          })
+          .on("shown.bs.modal", (e) => {
+            console.log("shown.bs.modal", e.target);
+          })
+          .on("hide.bs.modal", (e) => {
+            console.log("hide.bs.modal", e.target);
+          })
+          .on("hidden.bs.modal", (e) => {
+            console.log("hidden.bs.modal", e.target);
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+# FloatingDelayGroup
+
+Provides context for a group of floating elements that should
+share a `delay{:.objectKey}` which temporarily becomes `0{:js}`
+after the first floating element of the group opens.
+
+This allows higher discovery of floating elements when they have
+a hover delay (like tooltips) when their reference elements are
+placed near each other.
+
+[View example on CodeSandbox](https://codesandbox.io/s/icy-water-ktwif6?file=/src/Tooltip.tsx)
+
+{/* prettier-ignore */}
+```js
+import {
+  FloatingDelayGroup
+} from '@floating-ui/react-dom-interactions';
+
+function App() {
+  return (
+    <FloatingDelayGroup delay={{open: 1000, close: 200}}>
+      <Tooltip label="One">
+        <button>Ref</button>
+      </Tooltip>
+      <Tooltip label="Two">
+        <button>Ref</button>
+      </Tooltip>
+      <Tooltip label="Three">
+        <button>Ref</button>
+      </Tooltip>
+    </FloatingDelayGroup>
+  );
+}
+```
+
+## Example
+
+Relevant APIs to use with a `<FloatingDelayGroup />{:js}`:
+
+- `useDelayGroupContext(){:js}`
+- `useDelayGroup(){:js}` interaction
+
+Wrap your `onOpenChange{:.const}` callback with one that sets the
+current id of the delay group context to the current component.
+
+```js /delay/
+function Tooltip({label}) {
+  const {delay, currentId, setCurrentId} =
+    useDelayGroupContext();
+  const [open, setOpen] = useState(false);
+
+  const onOpenChange = useCallback(
+    (open) => {
+      setOpen(open);
+
+      if (open) {
+        setCurrentId(label);
+      }
+    },
+    [label, setCurrentId]
+  );
+
+  const {context} = useFloating({open, onOpenChange});
+  const {getReferenceProps, getFloatingProps} = useInteractions([
+    useDelayGroup(context, {id: label}),
+    useHover(context, {delay}),
+  ]);
+
+  // ...
+}
+```

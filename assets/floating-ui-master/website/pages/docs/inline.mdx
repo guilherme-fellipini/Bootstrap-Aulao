@@ -1,0 +1,101 @@
+# inline
+
+`inline(){:js}` provides improved positioning for inline
+reference elements that span over multiple lines, such as
+hyperlinks or range selections.
+
+This is useful as the default positioning using
+`getBoundingClientRect(){:js}` may appear "detached" when
+measuring over the bounding box.
+
+In the following examples, the `placement{:.objectKey}` is
+`'top'{:js}`.
+
+Without `inline(){:js}`:
+
+<img
+  width={692}
+  height={256}
+  alt="inline disabled"
+  src="/inline-disabled.png"
+/>
+
+With `inline(){:js}`:
+
+<img
+  width={692}
+  height={256}
+  alt="inline enabled"
+  src="/inline-enabled.png"
+/>
+
+## Usage
+
+```js
+import {computePosition, inline} from '@floating-ui/dom';
+
+computePosition(referenceEl, floatingEl, {
+  middleware: [inline()],
+});
+```
+
+### Choosing a rect
+
+By default, `inline(){:js}` infers which of the
+`ClientRect{:.class}`s to choose based on the
+`placement{:.objectKey}`. However, you may want a different rect
+to be chosen.
+
+For instance, if the user hovered over the last client rect, you
+likely want the floating element to be placed there. This logic
+is only applied when the reference element's rects are disjoined.
+
+```js
+function onMouseEnter({clientX, clientY}) {
+  computePosition(referenceEl, floatingEl, {
+    middleware: [inline({x: clientX, y: clientY})],
+  }).then(({x, y}) => {
+    // ...
+  });
+}
+
+referenceEl.addEventListener('mouseenter', onMouseEnter);
+```
+
+## Order
+
+`inline(){:js}` should generally be placed toward the beginning
+of your middleware array, before `flip(){:js}` (if used).
+
+## Options
+
+These are the options you can pass to `inline(){:js}`.
+
+```ts
+interface Options {
+  x?: number;
+  y?: number;
+  padding?: number | SideObject;
+}
+```
+
+### x
+
+default: `undefined{:js}`
+
+This is the viewport-relative (client) x-axis coordinate which
+can be passed in to choose a rect.
+
+### y
+
+default: `undefined{:js}`
+
+This is the viewport-relative (client) y-axis coordinate which
+can be passed in to choose a rect.
+
+### padding
+
+default: `2{:js}`
+
+This describes the padding around a disjoined rect when choosing
+it.

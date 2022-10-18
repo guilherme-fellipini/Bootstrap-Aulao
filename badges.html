@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Imagem</title>
+
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <h1>
+      Exemplo Treinamento Padrao <span class="badge bg-primary">New</span>
+    </h1>
+    <h2>
+      Exemplo Treinamento Padrao <span class="badge bg-primary">New</span>
+    </h2>
+    <h3>
+      Exemplo Treinamento Padrao <span class="badge bg-primary">New</span>
+    </h3>
+    <h4>
+      Exemplo Treinamento Padrao <span class="badge bg-primary">New</span>
+    </h4>
+    <h5>
+      Exemplo Treinamento Padrao <span class="badge bg-primary">New</span>
+    </h5>
+    <h6>
+      Exemplo Treinamento Padrao <span class="badge bg-primary">New</span>
+    </h6>
+    <hr />
+
+    <button id="btn-click" type="button" class="btn btn-primary">
+      Clique<span class="badge bg-dark">0</span>
+    </button>
+
+    <hr />
+
+    <button type="button" class="btn btn-primary">
+      Caixa de Entrada <span class="badge bg-secondary">5</span>
+      <!-- <span class="sr-only">Há 5 mensagens não lidas</span> -->
+    </button>
+
+    <hr />
+
+    <div class="span badge bg-primary">1</div>
+    <div class="span badge bg-secondary">2</div>
+    <div class="span badge bg-success">3</div>
+    <div class="span badge bg-warning">4</div>
+    <div class="span badge bg-info">5</div>
+    <div class="span badge bg-dark">6</div>
+    <div class="span badge bg-light">7</div>
+    <div class="span badge bg-primary">8</div>
+
+    <hr />
+
+    <span class="badge bg-primary">ok</span>
+    <span class="badge rounded-pill bg-primary">Ok</span>
+
+    <hr />
+
+    <a href="#" class="badge bg-success">Verde</a>
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(() => {
+        $("#btn-click").on("click", (e) => {
+          const valor = parseInt($(e.target).find(".badge").text());
+
+          $(e.target)
+            .find(".badge")
+            .text(valor + 1);
+        });
+      });
+    </script>
+  </body>
+</html>

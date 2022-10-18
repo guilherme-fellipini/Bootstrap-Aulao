@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+  </head>
+  <body>
+    <hr />
+
+    <div class="container">
+      <div class="accordion" id="accordion">
+        <div class="card">
+          <div class="card-header">
+            <button
+              class="btn btn-link btn-block"
+              type="button"
+              data-toggle="collapse"
+              data-target="#a"
+            >
+              A
+            </button>
+          </div>
+          <div id="a" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio
+                sunt similique, consequatur voluptatem delectus dolorem ex,
+                cumque est iusto, suscipit doloremque laudantium! Corrupti ex
+                aspernatur earum, officia qui dolores rem!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <button
+              class="btn btn-link btn-block"
+              type="button"
+              data-toggle="collapse"
+              data-target="#b"
+            >
+              B
+            </button>
+          </div>
+          <div id="b" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio
+                sunt similique, consequatur voluptatem delectus dolorem ex,
+                cumque est iusto, suscipit doloremque laudantium! Corrupti ex
+                aspernatur earum, officia qui dolores rem!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <button
+              class="btn btn-link btn-block"
+              type="button"
+              data-toggle="collapse"
+              data-target="#c"
+            >
+              C
+            </button>
+          </div>
+          <div id="c" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio
+                sunt similique, consequatur voluptatem delectus dolorem ex,
+                cumque est iusto, suscipit doloremque laudantium! Corrupti ex
+                aspernatur earum, officia qui dolores rem!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/jquery-3.6.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(() => {});
+    </script>
+  </body>
+</html>

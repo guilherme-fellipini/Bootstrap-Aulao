@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        title="Titulo do Pop Over"
+        data-toggle="popover"
+        data-content="Conteudo do PopOver :)"
+      >
+        Mostrar PopOver
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        data-toggle="popover"
+        data-content="Conteudo do PopOver :)Conteudo do PopOver :)Conteudo do PopOver :)Conteudo do PopOver :)Conteudo do PopOver :)Conteudo do PopOver :)Conteudo do PopOver :)"
+      >
+        Mostrar PopOver
+      </button>
+      <hr />
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        title="Titulo do Pop Over"
+        data-toggle="popover"
+        data-content="Conteudo do PopOver :)"
+        data-placement="left"
+      >
+        Mostrar PopOver
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        title="Titulo do Pop Over"
+        data-toggle="popover"
+        data-content="Conteudo do PopOver :)"
+        data-placement="bottom"
+      >
+        Mostrar PopOver
+      </button>
+
+      <hr />
+
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        title="Titulo do Pop Over"
+        data-toggle="popover"
+        data-content="Conteudo do PopOver :)"
+        data-placement="left"
+        data-trigger="focus"
+      >
+        Mostrar PopOver
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        title="Titulo do Pop Over"
+        data-toggle="popover"
+        data-content="Conteudo do PopOver :)"
+        data-placement="bottom"
+        data-trigger="hover"
+      >
+        Mostrar PopOver
+      </button>
+
+      <button type="button" class="btn btn-danger" id="btn-click">
+        Abrir PopOvers
+      </button>
+    </div>
+
+    <script src="assets/jquery-3.6.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(() => {
+        $('[data-toggle="popover"]').popover();
+
+        $("#btn-click").on("click", (e) => {
+          $('[data-toggle="popover"]').popover("toggle");
+        });
+      });
+    </script>
+  </body>
+</html>

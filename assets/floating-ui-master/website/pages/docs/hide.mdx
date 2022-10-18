@@ -1,0 +1,114 @@
+# hide
+
+`hide(){:js}` provides data to hide the floating element in
+applicable situations, usually when it's not within the same
+clipping context as the reference element.
+
+<div className="flex flex-col gap-4">
+  <Chrome
+    label="Scroll up"
+    center
+    scrollable
+    className="h-96"
+    scrollHeight={325}
+  >
+    <Floating
+      portaled
+      middleware={[{name: 'offset', options: 5}, {name: 'hide'}]}
+    >
+      <div className="grid place-items-center w-32 h-32 border-2 border-gray-1000 border-dashed" />
+    </Floating>
+  </Chrome>
+</div>
+
+In the above example, the floating element turns red once it has
+`escaped{:.objectKey}` the reference element's clipping context.
+Once the reference element is hidden, it hides itself.
+
+## Usage
+
+```js
+import {computePosition, hide} from '@floating-ui/dom';
+
+computePosition(referenceEl, floatingEl, {
+  middleware: [hide()],
+}).then(({middlewareData}) => {
+  const {referenceHidden} = middlewareData.hide;
+
+  Object.assign(floatingEl.style, {
+    visibility: referenceHidden ? 'hidden' : 'visible',
+  });
+});
+```
+
+## Order
+
+`hide(){:js}` should generally be placed at the end of your
+middleware array.
+
+## Options
+
+These are the options you can pass to `hide(){:js}`.
+
+```js
+interface Options extends DetectOverflowOptions {
+  strategy?: 'referenceHidden' | 'escaped';
+}
+```
+
+### strategy
+
+default: `'referenceHidden'{:js}`
+
+Specifies the type of hiding strategy to use.
+
+```js
+hide({strategy: 'escaped'}); // 'referenceHidden' by default
+```
+
+If you'd like to use multiple strategies, call `hide(){:js}`
+multiple times in your middleware array with different options.
+
+### ...detectOverflowOptions
+
+All of [detectOverflow](/docs/detectOverflow#options)'s options
+can be passed. For instance:
+
+```js
+hide({padding: 5}); // 0 by default
+```
+
+## Data
+
+```ts
+interface Data {
+  referenceHidden?: boolean;
+  referenceHiddenOffsets?: SideObject;
+  escaped?: boolean;
+  escapedOffsets?: SideObject;
+}
+```
+
+Depending on the strategy used, these options may exist in the
+data object.
+
+### referenceHidden
+
+Determines whether the reference element is fully clipped, and is
+therefore hidden from view.
+
+Note that “hidden” means clipping, `visibility` and `opacity`
+styles are not considered.
+
+### referenceHiddenOffsets
+
+A side object containing overflow offsets.
+
+### escaped
+
+Determines whether the floating element has "escaped" the
+reference's clipping context and appears fully detached from it.
+
+### escapedOffsets
+
+A side object containing overflow offsets.

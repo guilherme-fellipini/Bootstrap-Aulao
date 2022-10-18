@@ -1,0 +1,112 @@
+# autoPlacement
+
+`autoPlacement(){:js}` chooses the placement that has the most
+space available automatically.
+
+You’ll want to use this instead of `flip(){:js}` if you don't
+want to give the floating element a “preferred” placement and let
+it choose a placement for you.
+
+<div className="flex flex-col gap-4">
+  <Chrome
+    label="Scroll the container"
+    center
+    scrollable
+    className="h-96"
+  >
+    <Floating
+      middleware={[
+        {
+          name: 'autoPlacement',
+          options: {allowedPlacements: ['top', 'bottom']},
+        },
+      ]}
+    >
+      <div className="grid place-items-center w-8 h-8 border-2 border-gray-1000 border-dashed" />
+    </Floating>
+  </Chrome>
+</div>
+
+In the above example, the automatic “most space” strategy is
+demonstrated (in contrast to flip’s preferred + fallback “no
+space” one).
+
+## Usage
+
+```js
+import {computePosition, autoPlacement} from '@floating-ui/dom';
+
+computePosition(referenceEl, floatingEl, {
+  middleware: [autoPlacement()],
+});
+```
+
+> This cannot be used with `flip(){:js}`.
+
+## Options
+
+These are the options you can pass to `autoPlacement(){:js}`.
+
+```ts
+interface Options extends DetectOverflowOptions {
+  alignment?: Alignment | null;
+  autoAlignment?: boolean;
+  allowedPlacements?: Array<Placement>;
+}
+```
+
+### alignment
+
+default: `null{:js}`
+
+Without options, `autoPlacement(){:js}` will choose any of the
+`Side{:.class}` placements which fit best, i.e. `'top'{:js}`,
+`'right'{:js}`, `'bottom'{:js}`, or `'left'{:js}`.
+
+By specifying an alignment, it will choose those aligned
+placements.
+
+```js
+autoPlacement({
+  // top-start, right-start, bottom-start, left-start
+  alignment: 'start',
+});
+```
+
+### autoAlignment
+
+default: `true{:js}`
+
+When `alignment{:.objectKey}` is specified, this describes
+whether to automatically choose placements with the opposite
+alignment if they fit better.
+
+```js
+autoPlacement({
+  alignment: 'start',
+  // Won't also choose 'end' alignments if those fit better
+  autoAlignment: false,
+});
+```
+
+### allowedPlacements
+
+default: computed subset of `ALL_PLACEMENTS{:.const}`
+
+Describes the placements which are allowed to be chosen.
+
+```js
+autoPlacement({
+  // 'right' and 'left' won't be chosen
+  allowedPlacements: ['top', 'bottom'],
+});
+```
+
+### ...detectOverflowOptions
+
+All of [detectOverflow](/docs/detectOverflow#options)'s options
+can be passed. For instance:
+
+```js
+autoPlacement({padding: 5}); // 0 by default
+```

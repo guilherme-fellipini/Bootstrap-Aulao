@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dropdown</title>
+
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary">Menu</button>
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle-split dropdown-toggle"
+          data-bs-toggle="dropdown"
+        >
+          <span class="sr-only"></span>
+        </button>
+        <div class="dropdown-menu" style="max-width: 350px">
+          <a href="" class="dropdown-item">1</a>
+          <a href="" class="dropdown-item">2</a>
+          <a href="" class="dropdown-item">3</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- <hr /> -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(() => {});
+    </script>
+  </body>
+</html>

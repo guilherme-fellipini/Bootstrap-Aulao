@@ -1,0 +1,21 @@
+name: Release Popper
+
+on: [workflow_dispatch]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: v2.x
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
+      - run: npx rollingversions publish --deploy-branch "v2.x"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_POPPER }}

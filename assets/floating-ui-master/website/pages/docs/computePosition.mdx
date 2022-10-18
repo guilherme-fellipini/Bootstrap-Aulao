@@ -1,0 +1,192 @@
+# computePosition
+
+The `computePosition(){:js}` function returns the `x` and `y`
+coordinates to place a floating element next to a given reference
+element.
+
+Together with [autoUpdate](/docs/autoUpdate), the floating
+element remains “anchored” to the reference element.
+
+## Usage
+
+With two elements on the document like so:
+
+```html
+<button id="button">My button</button>
+<div id="tooltip">My tooltip</div>
+```
+
+Call `computePosition(){:js}` with these elements as arguments:
+
+```js
+import {computePosition} from '@floating-ui/dom';
+
+const button = document.querySelector('#button');
+const tooltip = document.querySelector('#tooltip');
+
+computePosition(button, tooltip).then(({x, y}) => {
+  // Do things with `x` and `y`
+});
+```
+
+Since a promise is returned, we can chain the `.then(){:js}`
+method which will resolve with the data necessary to position the
+tooltip next to the button.
+
+`x{:.param}` and `y{:.param}` represent the positioning
+coordinates of the floating element relative to its
+`offsetParent` such that it will be positioned on the
+`'bottom'{:js}` center (by default) of the reference element.
+
+The recommended way to position the tooltip is to use
+`Object.assign(){:js}` on the style object:
+
+```js {6-11,14-17}
+import {computePosition} from '@floating-ui/dom';
+
+const button = document.querySelector('#button');
+const tooltip = document.querySelector('#tooltip');
+
+// Can be done in your CSS
+Object.assign(tooltip.style, {
+  position: 'absolute',
+  top: '0',
+  left: '0',
+});
+
+computePosition(button, tooltip).then(({x, y}) => {
+  Object.assign(tooltip.style, {
+    left: `${x}px`,
+    top: `${y}px`,
+  });
+});
+```
+
+The layout of the floating element prior to being positioned
+matters:
+
+- The CSS position must be `'absolute'{:js}` prior to
+  `computePosition(){:js}` being called. This sets the correct
+  initial dimensions (instead of being "block" layout).
+- Setting `top{:.objectKey}` and `left{:.objectKey}` to
+  `'0'{:js}` initially minimizes layout interference with the
+  dimensions of the element, so that its final dimensions are
+  ready before being positioned.
+
+If your floating element is too big to fit in the viewport prior
+to being positioned, it can cause issues with the calculations.
+Use [size](/docs/size) to constrain its dimensions.
+
+## Options
+
+Passed as a third argument, this is the object to configure the
+behavior.
+
+```js
+computePosition(referenceEl, floatingEl, {
+  // options
+});
+```
+
+### placement
+
+Where to place the floating element relative to its reference
+element. 12 strings are available:
+
+```ts
+type Placement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end';
+```
+
+```js
+computePosition(referenceEl, floatingEl, {
+  placement: 'bottom-start', // 'bottom' by default
+});
+```
+
+The `-start{:.string}` and `-end{:.string}` alignments are
+[_logical_](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties)
+and will adapt to the writing direction (e.g. RTL) as expected.
+
+### strategy
+
+This is the type of CSS position property to use. Two strings are
+available:
+
+```ts
+type Strategy = 'absolute' | 'fixed';
+```
+
+```js
+computePosition(referenceEl, floatingEl, {
+  strategy: 'fixed', // 'absolute' by default
+});
+```
+
+Apply `position: fixed{:sass}` to your floating element (instead
+of `position: absolute{:sass}`) prior to the
+`computePosition(){:js}` call.
+
+The `'fixed'{:js}` strategy is useful in two ways:
+
+- Reduces "jumpiness" caused by needing to reposition the
+  floating element continually while scrolling if the reference
+  element is fixed.
+- Breaks the floating element out of a clipping container (make
+  it top-layer on the UI) more frequently than `'absolute'{:js}`
+  will.
+
+### middleware
+
+`computePosition(){:js}` starts with a basic placement anchor
+position. To modify this, middleware is used. They alter the
+positioning coordinates from the basic placement to customize the
+position, provide data, or act as "visibility optimization"
+techniques.
+
+The following are included in the package:
+
+- `offset(){:js}`
+- `shift(){:js}`
+- `flip(){:js}`
+- `arrow(){:js}`
+- `size(){:js}`
+- `autoPlacement(){:js}`
+- `hide(){:js}`
+- `inline(){:js}`
+
+These are documented in the navigation bar on the left.
+Importantly, you can also craft your own custom middleware to
+extend the behavior of the library.
+
+## Return value
+
+```ts
+interface ComputePositionReturn {
+  x: number;
+  y: number;
+  // The stateful placement, which can be different
+  // from the initial `placement` passed as options
+  placement: Placement;
+  strategy: Strategy;
+  middlewareData: MiddlewareData;
+}
+```
+
+## Updating
+
+Since `computePosition(){:js}` is only a single function call, it
+only positions your element once. To ensure the floating element
+remains anchored to the reference element in a variety of
+scenarios, use the [autoUpdate](/docs/autoUpdate) utility.

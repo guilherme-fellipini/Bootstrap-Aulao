@@ -1,0 +1,39 @@
+/* // Extra small devices (portrait phones, less than 576px)
+// No media query for `xs` since this is the default in Bootstrap */
+
+/* // Small devices (landscape phones, 576px and up) */
+body {
+  background-color: gray;
+}
+header {
+  margin: 2vh auto;
+}
+
+header,
+nav,
+main {
+  border: 2px solid green;
+  background-color: white;
+  min-height: 10vh;
+}
+nav,
+main {
+  min-height: 82vh;
+}
+
+@media (min-width: 576px) {
+  /* celular */
+}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  /* tablet */
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+}

@@ -1,0 +1,27 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  checks:
+    name: Linting and type checking
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/typescript
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/unit
+
+  functional-tests:
+    name: Functional tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/functional

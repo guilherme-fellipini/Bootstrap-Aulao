@@ -1,0 +1,130 @@
+# arrow
+
+`arrow(){:js}` provides data to position an inner element of the
+floating element (usually a triangle or caret) so that it is
+centered to the reference element.
+
+If you're using an aligned placement, like `'top-start'{:js}` or
+`'right-end'{:js}`, you may not need to use this middleware if
+you want the arrow's position to remain "static".
+
+## Usage
+
+Given an arrow element inside your floating element (with
+`position: absolute{:sass}` applied in its CSS):
+
+```html
+<div id="tooltip">
+  Tooltip text
+  <div id="arrow"></div>
+</div>
+```
+
+Pass it to the `arrow(){:js}` middleware and assign the dynamic
+styles:
+
+```js
+import {computePosition, arrow} from '@floating-ui/dom';
+
+const arrowEl = document.querySelector('#arrow');
+
+computePosition(referenceEl, floatingEl, {
+  middleware: [
+    arrow({
+      element: arrowEl,
+    }),
+  ],
+}).then(({middlewareData}) => {
+  const {x, y} = middlewareData.arrow;
+
+  Object.assign(arrowEl.style, {
+    left: x != null ? `${x}px` : '',
+    top: y != null ? `${y}px` : '',
+  });
+});
+```
+
+> Don't forget the `null` check! `x` and `y` can be `0` :-)
+
+This middleware is designed only to position the arrow on one
+axis (`x` for `'top'{:js}` or `'bottom'{:js}` placements). The
+other axis is considered "static", which means it does not need
+to be positioned dynamically.
+[You can see a full styling example in the tutorial](/docs/tutorial#arrow-middleware).
+
+## Order
+
+`arrow(){:js}` should generally be placed toward the end of your
+middleware array, after `shift(){:js}` (if used).
+
+## Options
+
+These are the options you can pass to `arrow(){:js}`.
+
+```ts
+interface Options {
+  element: HTMLElement;
+  padding?: Padding;
+}
+```
+
+### element
+
+default: `undefined{:js}`
+
+This is the arrow element to be positioned.
+
+```js
+arrow({
+  element: document.querySelector('#arrow'),
+});
+```
+
+### padding
+
+default: `0{:js}`
+
+This describes the padding between the arrow and the edges of the
+floating element. If your floating element has
+`border-radius{:.function}`, this will prevent it from
+overflowing the corners.
+
+```js
+arrow({
+  element: document.querySelector('#arrow'),
+  padding: 5, // stop 5px from the edges of the floating element
+});
+```
+
+## Data
+
+The following data is available in `middlewareData.arrow{:js}`:
+
+```ts
+interface Data {
+  x?: number;
+  y?: number;
+  centerOffset: number;
+}
+```
+
+### x
+
+This property exists if the arrow should be offset on the x-axis.
+
+### y
+
+This property exists if the arrow should be offset on the y-axis.
+
+### centerOffset
+
+This property describes where the arrow actually is relative to
+where it could be if it were allowed to overflow the floating
+element in order to stay centered to the reference element.
+
+This enables two useful things:
+
+- You can hide the arrow if it can't stay centered to the
+  reference, i.e. `centerOffset !== 0{:js}`.
+- You can interpolate the shape of the arrow (e.g. skew it) so it
+  stays centered as best as possible.

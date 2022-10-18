@@ -1,0 +1,154 @@
+# offset
+
+`offset(){:js}` displaces the floating element from its core
+`placement{:.objectKey}` along the specified axes.
+
+<Chrome center className="pt-16 pb-24">
+  <div className="flex gap-4">
+    <Floating
+      portaled
+      middleware={[{name: 'offset', options: 0}]}
+    >
+      <div className="grid place-items-center w-32 h-32 mx-auto border-2 border-gray-1000 border-dashed">
+        0px
+      </div>
+    </Floating>
+    <Floating
+      portaled
+      middleware={[{name: 'offset', options: 10}]}
+    >
+      <div className="grid place-items-center w-32 h-32 mx-auto border-2 border-gray-1000 border-dashed">
+        10px
+      </div>
+    </Floating>
+  </div>
+</Chrome>
+
+## Usage
+
+```js
+import {computePosition, offset} from '@floating-ui/dom';
+
+computePosition(referenceEl, floatingEl, {
+  middleware: [offset(10)],
+});
+```
+
+The value(s) passed are
+[_logical_](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties),
+meaning their effect on the physical result is dependent on the
+writing direction (e.g. RTL).
+
+## Order
+
+`offset(){:js}` should generally be placed at the beginning of
+your middleware array.
+
+## Options
+
+These are the options you can pass to `offset(){:js}`.
+
+```ts
+interface AxesOffsets {
+  mainAxis?: number;
+  crossAxis?: number;
+  alignmentAxis?: number | null;
+}
+
+type Options =
+  | number
+  | AxesOffsets
+  | ((
+      middlewareArguments: MiddlewareArguments
+    ) => number | AxesOffsets);
+```
+
+A number represents the distance (gutter or margin) between the
+floating element and the reference element. This is shorthand for
+`mainAxis{:.objectKey}`.
+
+```js
+offset(10);
+```
+
+### AxesOffsets
+
+This is an object which enables you to individually configure
+each axis.
+
+#### mainAxis
+
+default: `0{:js}`
+
+Represents the distance (gutter or margin) between the floating
+element and the reference element.
+
+```js
+offset({mainAxis: 10});
+```
+
+#### crossAxis
+
+default: `0{:js}`
+
+Represents the skidding between the floating element and the
+reference element.
+
+```js
+offset({crossAxis: 10});
+```
+
+#### alignmentAxis
+
+default: `null{:js}`
+
+Works on the same axis as `crossAxis{:.objectKey}` but applies
+only to aligned placements and works
+[_logically_](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties).
+The offset is inverted for `-end{:.string}` alignments.
+
+This will override the `crossAxis{:.objectKey}` offset when set
+to a number.
+
+```js
+offset({alignmentAxis: 10});
+```
+
+### Function
+
+You may also pass a function which returns the previously listed
+values — this enables you to read the dimensions of the reference
+or floating elements and the current `placement{:.objectKey}`.
+
+```js
+offset(({rects, placement}) =>
+  placement === 'bottom'
+    ? rects.floating.width
+    : rects.reference.width
+);
+
+offset(({rects, placement}) => ({
+  mainAxis: placement === 'top' ? 5 : -5,
+  crossAxis:
+    placement === 'right'
+      ? rects.reference.width
+      : rects.floating.width,
+}));
+```
+
+### Negative values
+
+Using the function technique above in combination with negative
+values enables the ability to "inset" the floating element such
+that it is positioned on top of the reference element in some
+fashion.
+
+For instance, if you wanted to mimic something like
+`'center'{:js}` for `placement{:.objectKey}` (with default
+placement):
+
+```js
+offset(({rects}) => {
+  return -rects.reference.height / 2 - rects.floating.height / 2;
+});
+```

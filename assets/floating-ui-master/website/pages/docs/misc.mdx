@@ -1,0 +1,86 @@
+# Misc
+
+## Subpixel and accelerated positioning
+
+Instead of `top{:.objectKey}` and `left{:.objectKey}` as shown
+throughout the docs, you can use `transform: translate(){:sass}`
+instead to position the floating element for increased
+performance.
+
+```js
+Object.assign(floatingEl.style, {
+  top: '0',
+  left: '0',
+  transform: `translate(${Math.round(x)}px,${Math.round(y)}px)`,
+});
+```
+
+`x` and `y` can contain decimals, so unless the
+`transform{:.objectKey}` translation is placed evenly on the
+device's subpixel grid, then there will be blurring. You can
+check `window.devicePixelRatio{:js}` to round by DPR.
+
+### 3D transforms
+
+You can also promote the floating element to its own layer:
+
+{/* prettier-ignore */}
+```js
+Object.assign(floatingEl.style, {
+  top: '0',
+  left: '0',
+  transform: `translate3d(${Math.round(x)}px,${Math.round(y)}px,0)`,
+});
+```
+
+If you're animating the location of the floating element, using
+`transform{:.objectKey}` will offer smoother animations.
+
+## z-index stacking and clipping
+
+Floating UI does not have opinions about how your elements stack
+on the z-axis. This means your element may be occluded beneath
+another positioned element if it has a higher `z-index`.
+
+Further, you may find your floating element is being clipped by
+its parent. `computePosition(){:js}` attempts to keep the
+floating element in view as best as possible in this scenario but
+in some cases this cannot be avoided.
+
+- Using the `'fixed'{:js}` strategy will "break" the floating
+  element out of its parent clipping context in the majority of
+  cases. This allows you to keep the floating element's DOM
+  context in tact.
+- The floating element can be appended to a root ancestor node
+  inside `<body>{:html}`, e.g.
+  `<div id="floating-root"></div>{:html}` (also referred to as
+  "portalling")
+
+In the future, Floating UI may
+[enable you to specify elements to avoid](https://github.com/floating-ui/floating-ui/issues/1440),
+so multiple floating elements can avoid colliding with each other
+intelligently without worrying about their `z-index`.
+
+## Handling large content
+
+When your floating element's width exceeds the viewport's, it can
+result in unexpected behavior.
+
+You can limit the width of the floating element using the
+following CSS:
+
+```css
+.floating {
+  max-width: calc(100vw - 10px);
+}
+```
+
+This will always make it 10 pixels less than the width of the
+viewport.
+
+The constant `10{:js}` shown in the example should be double the
+`padding{:.objectKey}` given to the `shift(){:js}` middleware if
+it's in use.
+
+Alternatively, you may experiment with the [size](/docs/size)
+middleware depending on the axis overflow is occurring.

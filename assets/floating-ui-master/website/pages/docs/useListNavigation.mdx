@@ -1,0 +1,271 @@
+# useListNavigation
+
+Adds focus-managed indexed navigation via arrow keys to a list of
+items within the floating element.
+
+```js /useListNavigation/
+import {
+  useFloating,
+  useInteractions,
+  useListNavigation,
+} from '@floating-ui/react-dom-interactions';
+
+// ...
+const {context} = useFloating();
+const {getReferenceProps, getFloatingProps, getItemProps} =
+  useInteractions([
+    useListNavigation(context, {
+      // props
+    }),
+  ]);
+```
+
+Spread `getItemProps(){:js}` to each list item. The list items
+must be focusable and should have an appropriate
+`role{:.keyword}` prop based on the role of the floating element.
+
+## Props
+
+```js
+interface Props {
+  listRef: React.MutableRefObject<Array<HTMLElement | null>>;
+  activeIndex: number | null;
+  onNavigate?: (index: number | null) => void;
+  enabled?: boolean;
+  selectedIndex?: number | null;
+  loop?: boolean;
+  nested?: boolean;
+  rtl?: boolean;
+  virtual?: boolean;
+  allowEscape?: boolean;
+  orientation?: 'vertical' | 'horizontal' | 'both';
+  cols?: number;
+  focusItemOnOpen?: 'auto' | boolean;
+  focusItemOnHover?: boolean;
+  openOnArrowKeyDown?: boolean;
+  disabledIndices?: Array<number>;
+}
+```
+
+### listRef
+
+default: empty list
+
+A ref that holds an array of list items. You can assign each item
+in the array by its index like so:
+
+```js
+const options = ['one', 'two', 'three'];
+const listRef = useRef([]);
+
+return options.map((option, index) => (
+  <li
+    key={option}
+    ref={(node) => {
+      listRef.current[index] = node;
+    }}
+  >
+    {option}
+  </li>
+));
+```
+
+### activeIndex
+
+default: `null{:js}`
+
+The currently active item index, which may or may not be
+selected.
+
+In a `<Select />{:js}`, this is the item that's currently
+highlighted (focused) but not selected. The user may have intent
+to select this item.
+
+### onNavigate
+
+default: no-op
+
+Callback invoked when the user navigates, passed in the current
+`activeIndex{:.param}`.
+
+```js
+const [activeIndex, setActiveIndex] = useState(null);
+
+useListNavigation(context, {
+  onNavigate: setActiveIndex,
+});
+```
+
+### enabled
+
+default: `true{:js}`
+
+Conditionally enable/disable the hook.
+
+```js
+useListNavigation(context, {
+  enabled: false,
+});
+```
+
+### selectedIndex
+
+default: `null{:js}`
+
+The currently selected item index, which may or may not be
+active.
+
+In a `<Select />{:js}`, this is the item shown in the trigger
+button.
+
+### loop
+
+default: `false{:js}`
+
+Whether to restart from the beginning or end if the user has
+navigated to the boundary of the list.
+
+```js
+useListNavigation(context, {
+  loop: true,
+});
+```
+
+### nested
+
+default: `false{:js}`
+
+If the list is nested within another one (e.g. a nested submenu),
+the navigation semantics change.
+
+```js
+useListNavigation(context, {
+  nested: true,
+});
+```
+
+### rtl
+
+default: `false{:js}`
+
+Whether the direction of the floating element's navigation is in
+RTL layout.
+
+```js
+useListNavigation(context, {
+  rtl: true,
+});
+```
+
+### virtual
+
+default: `false{:js}`
+
+Whether the focus is virtual (using
+`aria-activedescendant{:.keyword}`).
+
+Use this if you need focus to remain on the reference element
+(such as an input), but allow arrow keys to navigate list items.
+This is common in autocomplete listbox components.
+
+```js
+useListNavigation(context, {
+  virtual: true,
+});
+```
+
+> Your virtually-focused list items must have a unique
+> `id{:.keyword}` set on them.
+
+### allowEscape
+
+Determines whether focus can escape the list, such that nothing
+is selected after navigating beyond the boundary of the list. In
+some autocomplete/combobox components, this may be desired, as
+screen readers will return to the input.
+
+> `loop{:.objectKey}` must be `true{:js}`
+
+```js
+useListNavigation(context, {
+  loop: true,
+  allowEscape: true,
+});
+```
+
+### orientation
+
+default: `'vertical'{:js}`
+
+The orientation in which navigation occurs.
+
+```js
+useListNavigation(context, {
+  orientation: 'horizontal',
+});
+```
+
+### cols
+
+default: `1{:js}`
+
+Specifies how many columns the list has (i.e., it’s a grid).
+
+Use an orientation of `'horizontal'{:js}` (e.g. for an emoji
+picker/date picker, where pressing ArrowRight or ArrowLeft can
+change rows), or `'both'{:js}` (where the current row cannot be
+escaped with ArrowRight or ArrowLeft, only ArrowUp and
+ArrowDown).
+
+### focusItemOnOpen
+
+default: `'auto'{:js}`
+
+Whether to focus the item upon opening the floating element.
+`'auto'{:js}` infers what to do based on the input type (keyboard
+vs. pointer), while a boolean value will force the value.
+
+```js
+useListNavigation(context, {
+  focusItemOnOpen: true,
+});
+```
+
+### focusItemOnHover
+
+default: `true{:js}`
+
+Whether hovering an item synchronizes the focus.
+
+### openOnArrowKeyDown
+
+default: `true{:js}`
+
+Whether pressing an arrow key on the navigation's main axis opens
+the floating element.
+
+```js
+useListNavigation(context, {
+  openOnArrowKeyDown: false,
+});
+```
+
+### disabledIndices
+
+default: `undefined{:js}`
+
+By default elements with either a `disabled{:.keyword}` or
+`aria-disabled{:.keyword}` attribute are skipped in the list
+navigation – however, this requires the items to be rendered.
+
+This prop allows you to manually specify indices which should be
+disabled, overriding the default logic.
+
+For Windows-style select menus, where the menu does not open when
+navigating via arrow keys, specify an empty array.
+
+```js
+useListNavigation(context, {
+  disabledIndices: [0, 3],
+});
+```
